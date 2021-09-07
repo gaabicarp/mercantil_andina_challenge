@@ -1,0 +1,81 @@
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <form [formGroup]='formData' (ngSubmit)='submit()' class="w-75">
+            <h3 class="text-start">Datos Personales</h3>
+            <div class="d-flex flex-row justify-content-around">
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Nombre*</label>
+                    <input type="text" class="form-control" formControlName='nombre'>
+                    <span style="color: Red;" *ngIf="formData.controls['nombre'].touched && formData.controls['nombre'].invalid">Nombre es requerido y debe tener entre 2 y 15 caracteres.</span>
+                </div>
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Apellido*</label>
+                    <input type="text" class="form-control" formControlName='apellido'>
+                    <span style="color: Red;" *ngIf="formData.controls['apellido'].touched && formData.controls['apellido'].invalid">Apellido es requerido y debe tener entre 2 y 15 caracteres.</span>
+                </div>
+            </div>
+            <div class="d-flex flex-row justify-content-around">
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Usuario*</label>    
+                    <input type="text" class="form-control" formControlName='usuario' (change)='consultarDisponibilidad()'>
+                    <span style="color: Red;" *ngIf="formData.controls['usuario'].touched && formData.controls['usuario'].invalid">Usuario es requerido y debe tener entre 3 y 30 caracteres.</span>
+                    <span style="color: Red;" *ngIf="existeUsuario">Este nombre de usuario ya esta en uso.</span>
+                </div>
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Password*</label>   
+                    <input type="password" class="form-control" formControlName='password'>
+                    <span style="color: Red;" *ngIf="formData.controls['password'].touched && formData.controls['password'].invalid">La password debe tener al menos 8 caracteres, una mayuscula y un numero.</span>
+                </div>
+            </div>
+            <div class="d-flex flex-row justify-content-around">
+                <div class="w-50 m-2">
+                    <label for="dni" class="form-label">DNI*</label>
+                    <input type="number" class="form-control" formControlName='dni' pattern="[0-9]*">
+                    <span style="color: Red;" *ngIf="formData.controls['dni'].touched && formData.controls['dni'].invalid">DNI requerido.</span>
+                </div>
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Email</label>
+                    <input type="email" class="form-control" formControlName='email'>
+                    <span style="color: Red;" *ngIf="formData.controls['email'].touched && formData.controls['email'].invalid">El email debe ser valido.</span>
+                </div>
+            </div>
+            <div class="d-flex flex-row justify-content-around">
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Celular</label>
+                    <input type="text" class="form-control" formControlName='celular'>
+                    <span style="color: Red;" *ngIf="formData.controls['celular'].touched && formData.controls['celular'].invalid">El celular debe ser valido.</span>
+                </div>
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" formControlName='fechaNacimiento' [min]="minDate" [max]="maxDate">
+                    <span style="color: gray;">*Debe ser mayor de 18 años.</span>
+                </div>
+            </div>
+            <div class="m-2">
+                <label for="" class="form-label">Provincia*</label>
+                <select class="form-select form-control" name="provincias" formControlName='provincia' (change)='cargarMunicipios()'>
+                    <option value="-1" selected hidden>-Selecciona una provincia-</option>
+                    <option *ngFor='let provincia of provincias' value="{{provincia.id}}">{{provincia.nombre}}</option>
+                </select>
+                <!-- <input type="text" class="form-control" formControlName='ubicacion'> -->
+            </div>
+            <div class="d-flex flex-row justify-content-around" *ngIf='ocultarData'>
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Municipio*</label>
+                    <select class="form-select form-control" name="municipios" formControlName='municipio'>
+                        <option value="-1" selected hidden>-Selecciona un municipio-</option>
+                        <option *ngFor='let municipio of municipios' value="{{municipio.id}}" >{{municipio.nombre}}</option>
+                    </select>
+                </div>
+                <div class="w-50 m-2">
+                    <label for="" class="form-label">Domicilio*</label>    
+                    <input type="text" class="form-control" formControlName='domicilio'>
+                    <span style="color: Red;" *ngIf="formData.controls['domicilio'].touched && formData.controls['domicilio'].invalid">El domicilio es requerido.</span>
+                </div>
+            </div>
+            <div class="mt-5 mx-2 d-flex justify-content-between">
+                <p class="text-secondary">*dato requerido/obligatorio</p>
+                <button class="btn btn-primary btn-lg" type="submit" [disabled]='formData.invalid' >Siguiente</button>
+            </div>
+    </form>
+</div>
