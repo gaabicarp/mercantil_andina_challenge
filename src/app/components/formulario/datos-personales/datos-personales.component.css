@@ -1,0 +1,10 @@
+.input-container{
+    min-height: 95px;
+    width: 50%;
+}
+
+@media (max-width: 768px){
+    .input-container {
+        width: 100%;
+    }
+}

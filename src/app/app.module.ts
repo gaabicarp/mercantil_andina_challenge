@@ -11,6 +11,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DatosVehiculoComponent } from './components/formulario/datos-vehiculo/datos-vehiculo.component';
+import { CoberturasComponent } from './components/formulario/coberturas/coberturas.component';
+import { ResumenComponent } from './components/formulario/resumen/resumen.component';
+import { FinalComponent } from './components/formulario/final/final.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,9 @@ import { DatosVehiculoComponent } from './components/formulario/datos-vehiculo/d
     HomeComponent,
     DatosPersonalesComponent,
     DatosVehiculoComponent,
+    CoberturasComponent,
+    ResumenComponent,
+    FinalComponent,
   ],
   imports: [
     CommonModule,

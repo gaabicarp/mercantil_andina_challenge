@@ -6,15 +6,15 @@
             <div class="w-50 m-2">
                 <label for="" class="form-label">Marca*</label>
                 <select class="form-select form-control" name="marca" formControlName='marca' (change)='cargarModelos()'>
-                    <option value="-1" selected hidden>-Selecciona una marca-</option>
-                    <option *ngFor='let marca of marcas' value="{{marca.codigo}}">{{marca.desc}}</option>
+                    <option value="" selected hidden>-Selecciona una marca-</option>
+                    <option *ngFor='let marca of marcas' [ngValue]="marca">{{marca.desc}}</option>
                 </select>
             </div>
 
             <div class="w-50 m-2">
                 <label for="" class="form-label">Año*</label>
                 <select class="form-select form-control" name="anio" formControlName='anio' (change)='cargarModelos()'>
-                    <option value="-1" selected hidden>-Selecciona un año-</option>
+                    <option value="" selected hidden>-Selecciona un año-</option>
                     <option *ngFor='let anio of anios' value="{{anio}}">{{anio}}</option>
                 </select>
             </div>
@@ -22,25 +22,32 @@
         <div class="d-flex flex-row justify-content-around">
             <div class="w-50 m-2">
                 <label for="" class="form-label">Modelo*</label>
+                <div class="spinner-border text-primary" role="status" style="width: 15px; height: 15px;" *ngIf="cargandoModelos">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
                 <select class="form-select form-control" name="modelo" formControlName='modelo' [attr.disabled]="!visibleModelo ? '' : null" (change)="cargaVersion()">
-                    <option value="-1" selected hidden>-Selecciona un modelo-</option>
+                    <option value="" selected hidden>-Selecciona un modelo-</option>
+                    <option value="-1" hidden>-Sin modelo-</option>
                     <option *ngFor='let modelo of modelos' value="{{modelo}}">{{modelo}}</option>
                 </select>
             </div>
 
             <div class="w-50 m-2">
                 <label for="" class="form-label">Version</label>
+                <div class="spinner-border text-primary" role="status" style="width: 15px; height: 15px;" *ngIf="cargandoVersiones">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
                 <select class="form-select form-control" name="version" formControlName='version' [attr.disabled]="visibleVersion ? '' : null">
-                    <option value="-1" selected hidden>-Selecciona una version-</option>
+                    <option value="" selected hidden>-Selecciona una version-</option>
+                    <option value="-1" hidden>-Sin Version-</option>
                     <option *ngFor='let version of versiones' value="{{version}}">{{version.desc}}</option>
                 </select>
             </div>
 
         </div>
         <div class="mt-5 mx-2 d-flex justify-content-between">
-            <p class="text-secondary">*dato requerido/obligatorio</p>
+            <p class="text-secondary">*Dato requerido/obligatorio</p>
             <div>
-                <button class="btn btn-secondary btn-lg mx-1">Volver</button>
                 <button class="btn btn-primary btn-lg mx-1" type="submit" [disabled]='!formData.valid'>Siguiente</button>
             </div>
         </div>

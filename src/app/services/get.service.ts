@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Municipio, MunicipioResponse, Provincia, ProvinciaResponse } from '../models/provincia.model';
+import { MarcaVersion } from '../models/vehiculos.model';
+import { Cobertura } from '../models/coberturas.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,29 +15,35 @@ export class GetService {
   
   constructor(private http: HttpClient ) { }
 
-  obtenerProvincias(): Observable<any>{
-    return this.http.get<any>(this.API_GEO + '/provincias')
+  obtenerProvincias(): Observable<ProvinciaResponse>{
+    return this.http.get<ProvinciaResponse>(this.API_GEO + '/provincias')
   }
 
-  obtenerMunicipios(idProvincia: number): Observable<any>{
-    return this.http.get<any>(this.API_GEO + `/municipios?provincia=${idProvincia}&campos=id,nombre`)
-  }
-
-
-  consultarDisponibilidad(usuario: string): Observable<any>{
-    return this.http.get<any>(this.API_MOCK + `/usuarios?nombre=${usuario}`)
+  obtenerMunicipios(idProvincia: number): Observable<MunicipioResponse>{
+    return this.http.get<MunicipioResponse>(this.API_GEO + `/municipios?provincia=${idProvincia}&campos=id,nombre`)
   }
 
 
-  obtenerMarcaAuto(): Observable<any>{
-    return this.http.get<any>(this.API_MA + '/vehiculos/marcas');
+  consultarDisponibilidad(usuario: string): Observable<boolean>{
+    return this.http.get<boolean>(this.API_MOCK + `/usuarios?nombre=${usuario}`);
   }
 
-  obtenerModeloAuto(codigo: string,anio: string): Observable<any>{
-    return this.http.get<any>(this.API_MA + `/vehiculos/marcas/${codigo}/${anio}`);
+  consultarCoberturas(): Observable<Cobertura[]>{
+    return this.http.get<Cobertura[]>(this.API_MOCK + '/coberturas');
   }
 
-  obtenerVersionAuto(codigo: string,anio: string, modelo: string): Observable<any>{
-    return this.http.get<any>(this.API_MA + `/vehiculos/marcas/${codigo}/${anio}/${modelo}`);
+
+  obtenerMarcaAuto(): Observable<MarcaVersion[]>{
+    return this.http.get<MarcaVersion[]>(this.API_MA + '/vehiculos/marcas');
   }
+
+  obtenerModeloAuto(codigo: string,anio: string): Observable<string[]>{
+    return this.http.get<string[]>(this.API_MA + `/vehiculos/marcas/${codigo}/${anio}`);
+  }
+
+  obtenerVersionAuto(codigo: string,anio: string, modelo: string): Observable<MarcaVersion[]>{
+    return this.http.get<MarcaVersion[]>(this.API_MA + `/vehiculos/marcas/${codigo}/${anio}/${modelo}`);
+  }
+
+
 }

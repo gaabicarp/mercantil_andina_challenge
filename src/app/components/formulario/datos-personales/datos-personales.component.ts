@@ -1,16 +1,19 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GetService } from 'src/app/services/get.service';
 import {Provincia, Municipio} from '../../../models/provincia.model';
 import { DatePipe } from '@angular/common';
 import { datosPersonales } from 'src/app/models/datosPersonales.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-datos-personales',
   templateUrl: './datos-personales.component.html',
   styleUrls: ['./datos-personales.component.css']
 })
-export class DatosPersonalesComponent implements OnInit {
+export class DatosPersonalesComponent implements OnInit, OnDestroy {
+  entitySubscription: Array<Subscription> = [];
+  
   formData!: FormGroup;
 
   provincias!: Provincia[];
@@ -18,6 +21,9 @@ export class DatosPersonalesComponent implements OnInit {
 
   ocultarData!: boolean;
   existeUsuario!: boolean;
+  edadValida!: boolean;
+
+  cargandoMunicipios!: boolean;
 
   minDate!: string | null;
   maxDate!: string | null;
@@ -37,15 +43,19 @@ export class DatosPersonalesComponent implements OnInit {
     this.existeUsuario = false;
   }
 
+  ngOnDestroy(): void{
+    this.entitySubscription.forEach(subscription => subscription.unsubscribe())
+  }
+
   crearFormulario():void{
     this.formData = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]*$')]),
       apellido: new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(15), Validators.pattern('^[a-zA-Z ]*$')]),
       usuario: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]),
       password: new FormControl('', [Validators.required,         Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z\d$@$!%*?&].{7,}')]),
-      dni: new FormControl(null, [Validators.required, Validators.minLength(7),Validators.maxLength(8)]),
+      dni: new FormControl(null, [Validators.required, Validators.min(1000000),Validators.max(99999999)]),
       email: new FormControl(null, Validators.email),
-      celular: new FormControl(null),
+      celular: new FormControl(null, [Validators.min(1000000000), Validators.max(99999999999)]),
       fechaNacimiento: new FormControl(null),
       provincia: new FormControl(-1, Validators.required),
       municipio: new FormControl(-1, Validators.required),
@@ -59,27 +69,45 @@ export class DatosPersonalesComponent implements OnInit {
 
   cargarProvincias(): void{
     this.ocultarData = false;
-    this.getService.obtenerProvincias().subscribe(res => {
-      this.provincias = res.provincias;
-      console.log(this.provincias)
-    })
+    this.entitySubscription.push(
+      this.getService.obtenerProvincias().subscribe(res => {
+        console.log(JSON.stringify(res))
+        this.provincias = res.provincias;
+      })
+    )
   }
 
   cargarMunicipios(): void{
-    this.ocultarData = true;
-    this.getService.obtenerMunicipios(this.formData.value.provincia).subscribe(res => {
-      console.log(res);
-      this.municipios = res.municipios;
-    })
+    this.cargandoMunicipios = true;
+    this.entitySubscription.push(
+      this.getService.obtenerMunicipios(this.formData.value.provincia.id).subscribe(res => {
+        console.log(JSON.stringify(res))
+        this.municipios = res.municipios;
+        this.ocultarData = true;
+        this.cargandoMunicipios = false;
+      })
+    )
   }
 
   consultarDisponibilidad(): void{
     console.log(this.formData.value.usuario.length)
     if(this.formData.value.usuario.length > 3){
-      this.getService.consultarDisponibilidad(this.formData.value.usuario).subscribe(res=>{
-        this.existeUsuario = res;
-      })
+      this.entitySubscription.push(
+        this.getService.consultarDisponibilidad(this.formData.value.usuario).subscribe(res=>{
+          this.existeUsuario = res;
+        })
+      )
     }
+  }
+
+  validarEdad(): void{
+    console.log(this.formData.value.fechaNacimiento)
+    if(this.formData.value.fechaNacimiento < this.maxDate! && this.formData.value.fechaNacimiento > this.minDate!){
+      this.edadValida = true;
+    } else{
+      this.edadValida = false;
+    }
+
   }
 
   validarFecha(): void{
@@ -99,4 +127,4 @@ export class DatosPersonalesComponent implements OnInit {
 
 }
 
-// [disabled]='!formData.valid || existeUsuario'
+

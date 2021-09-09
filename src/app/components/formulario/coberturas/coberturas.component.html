@@ -1,0 +1,27 @@
+<div class="d-flex flex-wrap justify-content-around px-5 mx-3">
+    <div class="card shadow rounded-3 border-primary p-4 m-3 justify-content-around" *ngFor='let cobertura of coberturas'>
+        <h4 class="text-primary">{{cobertura.titulo}}</h4>
+        <div class="d-flex justify-content-between">
+            <p class="text-secondary">Cobertura {{cobertura.producto}}</p>
+            <div class="d-flex align-items-center justify-content-center">
+                <img src="../../../../assets/estrella.png" alt="" width="15px" height="15px">
+                <p class="text-success fw-bold">{{cobertura.puntaje}}/5</p>
+            </div>
+        </div>
+        <hr>
+        <div class="card-descripcion-texto">{{cobertura.descripcion}}</div>
+        <div class="my-3">
+            <h3 class="mb-0 text-center text-primary">${{cobertura.costo}}</h3>
+        </div>
+        <div class="mb-3">
+            <p class="text-secondary fst-italic">Franquicia: ${{cobertura.franquicia}}</p>
+            <div class="d-flex align-items-center">
+                <p class="text-secondary fst-italic">Cobertura de granizo</p>
+                <img src="../../../../assets/{{cobertura.granizo? 'checked' : 'x-button'}}.png" alt="" height="15px" width="15px">
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" (click)="seleccionarCobertura(cobertura)">Elegir Cobertura</button>
+        </div>
+    </div>
+</div>

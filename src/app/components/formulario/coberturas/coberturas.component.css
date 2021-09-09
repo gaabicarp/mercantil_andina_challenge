@@ -1,0 +1,8 @@
+.card{
+    max-width: 300px;
+    min-height: 400px;
+}
+
+.card-descripcion-texto{
+    font-size: 14px;
+}

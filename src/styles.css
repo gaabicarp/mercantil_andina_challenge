@@ -1,12 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 html{
-    min-height: 100%;
+    min-height: 100vh;
     position: relative;
 }
 body{
-    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
     margin: 0;
 }
 p{
     margin: 0;
+}
+
+div{
+    box-sizing: border-box;
+}
+
+.root{
+    width: 100%;
 }
